@@ -1,61 +1,97 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
-import React from 'react'
-import {numberWithCommas} from '../../Utils/Price'
-export default function Card({title, price, teacher, time , image}) {
-  return (
-    <View style={styles.card}>
-      <Image source={image} style={styles.courseImage}/>
-      <View style={{padding :20}}>
-            <Text style={styles.title}>{title}</Text>
-            <View style={styles.courseDetails}>
-                <Text style={styles.price}>
-                 {`قیمت دوره : ${numberWithCommas(price)} تومان`}
-                </Text>
-                <Text style={styles.time}>زمان دوره: {time}</Text>  
+import React from "react";
+import ToplearnText from "./topLearnText";
+import { View, StyleSheet, Image, ScrollView } from "react-native";
+import { numberWithCommas } from './../../Utils/Price';
+const Card = ({ title, price, teacher, time, image, courseInfo = null }) => {
+    return (
+        <View style={styles.card}>
+            <Image
+                resizeMode="contain"
+                source={{
+                    uri : `https://rnapi.ghorbany.dev/${image}`
+                }}
+                style={styles.courseImage}
+            />
+            <View style={{ padding: 20 }}>
+                <ToplearnText fontFamily="yekan" size="2" styles={styles.title}>
+                    {title}
+                </ToplearnText>
+                <View style={styles.courseDetails}>
+                    <ToplearnText fontFamily="yekan" size="1.5">
+                        {`قیمت دوره : ${price === 0 ? 'رایگان' : `${numberWithCommas(price)} تومان`}`}
+                    </ToplearnText>
+                    <ToplearnText fontFamily="yekan" size="1.5">
+                        زمان دوره : {time}
+                    </ToplearnText>
+                </View>
+                <View style={styles.userContainer}>
+                    <ToplearnText
+                        fontFamily="ih"
+                        size="1.5"
+                        styles={styles.teacher}
+                    >
+                        مدرس دوره : {teacher}
+                    </ToplearnText>
+                </View>
             </View>
-            <View style={styles.userContainer}>
-                <Text style={styles.teacher}>مدرس دوره: {teacher}</Text>
-            </View>
-      </View>
-    </View>
-  )
-}
+            {courseInfo ? (
+                <View style={{flex :1, padding :3}}>
+                    <ToplearnText fontFamily="yekan" size="2.5">
+                        توضیحات دوره :
+                    </ToplearnText>
+                    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                        <ToplearnText
+                            fontFamily="ih"
+                            size="1.7"
+                            styles={styles.courseInformation}
+                        >
+                            {courseInfo}
+                        </ToplearnText>
+                    </ScrollView>
+                </View>
+            ) : null}
+        </View>
+    );
+};
+
+export default Card;
 
 const styles = StyleSheet.create({
-    card :{
-        borderRadius : 15,
-        backgroundColor : 'white',
-        marginBottom : 20,
-        overflow : 'hidden',
+    card: {
+        flex: 1,
+        borderRadius: 15,
+        backgroundColor: "white",
+        marginBottom: 20,
     },
-    courseImage : {
-        width : '100%',
+    courseImage: {
+        width: "100%",
         height: 300,
     },
-    userContainer : {
-        marginVertical : 10,
+    courseDetails: {
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
-    courseDetails : {
-        flexDirection : 'row',
-        justifyContent : 'space-between',
+    container: {
+        flexDirection: "row",
+        marginVertical: 20,
+        padding: 15,
     },
-    title : {
-        marginBottom : 7,
-        fontFamily : 'yekan',
-        fontSize : 20,
-        alignSelf : 'center',
-
+    courseInformation: {
+        textAlign: "justify",
+        marginVertical: 10,
+        lineHeight: 25,
     },
-    time: {
-        fontFamily : 'yekan',
+    screen: {
+        backgroundColor: "#f8f4f4",
     },
-
-    price : {
-        fontFamily : 'yekan',
+    userContainer: {
+        marginVertical: 10,
     },
-    teacher : {
-        fontFamily : 'ih',
-        fontSize : 15,
-        alignSelf: 'center'
-    }
-})
+    title: {
+        marginBottom: 7,
+        alignSelf: "center",
+    },
+    teacher: {
+        alignSelf: "center",
+    },
+});

@@ -1,15 +1,34 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
-import CoursesScreen from '../screens/CoursesScreen';
 import Screen from '../components/shared/screen';
-import NewCoursesScreen from './../screens/NewCoursesScreen';
-import TopCoursesScreen from './../screens/TopCoursesScreen';
 import {RFPercentage} from 'react-native-responsive-fontsize'
+import TopLearnContext from '../contexts/TopLearnContext';
+
+import {NewCoursesScreen, TopCoursesScreen, CoursesScreen} from './../screens'
+import { fetchCourses } from '../api/courses';
+import { ActivityIndicator } from 'react-native'
 const TopTab = createMaterialTopTabNavigator();
 
 const TopTabNavigator = () => {
+
+    const [getCourses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true)
+    useEffect(()=>{
+        const fetchData = async () =>{
+            const courses = await fetchCourses();
+            setCourses(courses);
+            setLoading(false);
+        }
+        fetchData();
+    },[])
+
     return (
+        <TopLearnContext.Provider value = {{
+            courses : getCourses,
+            loading
+        }}>
         <Screen>
+            
             <TopTab.Navigator
                 initialRouteName="AllCourses"
                 backBehavior='none'
@@ -43,7 +62,10 @@ const TopTabNavigator = () => {
                     }}
                 />
             </TopTab.Navigator>
+            {loading ?  <ActivityIndicator size="large" color = "tomato" animating = {loading} style={{flex:1}}/> : null}
+
         </Screen>
+        </TopLearnContext.Provider >
     );
 }
 

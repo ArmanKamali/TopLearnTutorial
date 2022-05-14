@@ -1,8 +1,9 @@
-import React from "react";
-import { View, StyleSheet, Image } from "react-native";
+import React, {useState} from "react";
+import { View, StyleSheet, Image, ActivityIndicator } from "react-native";
 import * as Yup from "yup";
-import {TopLearnForm, TopLearnFormField, SubmitButton } from '../components/forms'
+import {TopLearnForm, TopLearnFormField, SubmitButton} from '../components/forms'
 import Screen from './../components/shared/screen';
+import { registerUser } from './../api/users';
 
 const validationSchema = Yup.object().shape({
     fullname: Yup.string().required("نام و نام خانوادگی الزامی می باشد"),
@@ -17,9 +18,27 @@ const validationSchema = Yup.object().shape({
         .oneOf([Yup.ref("password"), null], "کلمه های عبور باید یکسان باشند"),
 });
 
-const RegisterScreen = () => {
+const RegisterScreen = ({navigation}) => {
+    const [loading, setLoading] = useState(false);
+
+    const handleUserRegisteration = async(user) => {
+        try{
+            const status = await registerUser(user);
+            if(status === 201){
+                navigation.navigate('Login');
+                setLoading(false)
+            }else{
+                setLoading(false)
+                console.log("Server error")
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     return (
         <Screen style={styles.container}>
+
             <Image style={styles.logo} source={require("../assets/logo.png")} />
             <TopLearnForm
                 initialValues={{
@@ -28,7 +47,10 @@ const RegisterScreen = () => {
                     password: "",
                     passwordConfirmation: "",
                 }}
-                onSubmit={(values) => console.log(values)}
+                onSubmit={(user) =>{
+                    setLoading(true)
+                    handleUserRegisteration(user);
+                }}
                 validationSchema={validationSchema}
             >
                 <TopLearnFormField
@@ -63,10 +85,13 @@ const RegisterScreen = () => {
                     placeholderTextColor="royalblue"
                     secureTextEntry
                 />
-                <View style={{ width: "60%" }}>
+                <View style={{ width: "60%" }}> 
                     <SubmitButton title="ثبت نام" />
                 </View>
             </TopLearnForm>
+            {loading ?  <ActivityIndicator size="large" color = "tomato" animating = {loading} style={{flex:1}}/> : null}
+
+
         </Screen>
     );
 };

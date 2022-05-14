@@ -8,7 +8,7 @@ const CustomButton = ({ title, onPress, color = "tomato" }) => {
             style={[styles.button, { backgroundColor: color }]}
             onPress={onPress}
         >
-            <TopLearnText styles={styles.text} fontFamily='ih' size="2">{title}</TopLearnText>
+            <TopLearnText styles={styles.text} color = "white" fontFamily='ih' size="2.2">{title}</TopLearnText>
         </TouchableOpacity>
     );
 };
@@ -27,6 +27,5 @@ const styles = StyleSheet.create({
     },
     text: {
         color: "white",
-
     },
 });

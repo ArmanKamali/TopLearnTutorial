@@ -8,7 +8,7 @@ const TabsNavigator = () => {
 
     return (
         <Tab.Navigator
-            initialRouteName='MyCourses'
+            initialRouteName='Courses'
             screenOptions={({route}) => ({ 
                 headerShown: false,
                 tabBarIcon : ({ focused, color , size }) => {

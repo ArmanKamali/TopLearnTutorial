@@ -1,56 +1,27 @@
-import React from 'react';
+import React , {useContext} from 'react';
 import Screen from '../components/shared/screen';
-import { StyleSheet, FlatList , View, Image, Text} from 'react-native'
+import { StyleSheet, FlatList , TouchableOpacity, ActivityIndicator} from 'react-native'
 import Card from '../components/shared/Card';
+import TopLearnContext from './../contexts/TopLearnContext';
 
-const courses = [
-    {
-        id: 1,
-        title: "دوره جامع NodeJs",
-        price: "300000",
-        time: "15:00:00",
-        teacher: "یونس قربانی",
-        image: require("../assets/courses/NodeJs.jpg"),
-    },
-    {
-        id: 2,
-        title: "دوره جامع ReactJs",
-        price: "200000",
-        time: "15:00:00",
-        teacher: "یونس قربانی",
-        image: require("../assets/courses/ReactJs.jpg"),
-    },
-    {
-        id: 3,
-        title: "دوره جامع ElectronJs",
-        price: "200000",
-        time: "15:00:00",
-        teacher: "یونس قربانی",
-        image: require("../assets/courses/Electron.jpg"),
-    },
-    {
-        id: 4,
-        title: "دوره جامع React Native",
-        price: "200000",
-        teacher: "یونس قربانی",
-        time: "15:00:00",
-        image: require("../assets/courses/ReactNative.jpg"),
-    },
-]
-const CoursesScreen = () => {
+const CoursesScreen = ({navigation}) => {
+    const context = useContext(TopLearnContext);
+
     return (
         <Screen style={styles.container}>
             <FlatList
-                data = {courses}
-                keyExtractor = {(course) => course.id.toString()}
+                data = {context.courses}
+                keyExtractor = {(course) => course._id.toString()}
                 renderItem = {({item}) => (
-                    <Card
-                        title = {item.title}
-                        time={item.time}
-                        price={item.price}
-                        image={item.image}
-                        teacher={item.teacher}
-                    />
+                    <TouchableOpacity onPress={()=> navigation.navigate('CourseDetails', {course: item})}>
+                        <Card
+                            title = {item.title}
+                            time="15:00:00"
+                            price={item.price}
+                            image={item.imageUrl}
+                            teacher='یونس قربانی'
+                        />
+                    </TouchableOpacity>
                 )}
             />
         </Screen>
