@@ -1,19 +1,25 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import NetInfo from '@react-native-community/netinfo'
+
 import CustomButton from "./../components/shared/CustomButton";
 import TopLearnText from './../components/shared/topLearnText';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackActions, useNavigationState } from '@react-navigation/native'
 import {
     Alert,
     View,
-     StyleSheet,
+    StyleSheet,
     Image,
     ImageBackground,
     BackHandler
 } from "react-native";
+import { decodeToken } from "../Utils/jwt";
+import { useToast } from "react-native-toast-notifications";
+
 
 const confirmationAlert = () => {
     return (
-        Alert.alert('ارتباط با سرور','برای استفاده از اپلیکیشن باید به اینترنت متصل باشید',
+        Alert.alert('ارتباط با سرور', 'برای استفاده از اپلیکیشن باید به اینترنت متصل باشید',
             [
                 {
                     text: 'باشه',
@@ -27,14 +33,59 @@ const confirmationAlert = () => {
 }
 
 const WelcomeScreen = ({ navigation }) => {
+    const toast = useToast();
+    const screenIndex = useNavigationState(state => state.index)
     useEffect(()=>{
-        const checkForNet = async ()=>{
-            const state = await NetInfo.fetch()
-            if(!state.isConnected) confirmationAlert();
+        let currentCount = 0;
+
+        if(screenIndex <= 0){
+            BackHandler.addEventListener("hardwareBackPress", () =>{
+                if(currentCount === 1){
+                    BackHandler.exitApp();
+                    return true;
+                }
+
+                currentCount += 1
+                
+                setTimeout(()=>{
+                    currentCount = 0;
+     
+                },1000)
+
+                return true;
+            })
+        }
+    },[])
+    useEffect(() => {
+        const checkForNet = async () => {
+            try {
+                const state = await NetInfo.fetch()
+                if (!state.isConnected) confirmationAlert();
+                else {
+                    const token = await AsyncStorage.getItem('token');
+                    const userId = JSON.parse(await AsyncStorage.getItem('userId'));
+
+                    if (token !== null && userId !== null) {
+                        const decodedToken = decodeToken(token);
+
+                        if (decodedToken.user.userId === userId)
+                            // navigation.navigate('Home');
+                            navigation.dispatch(
+                                StackActions.replace('Home')
+                            )
+                        else {
+                            await AsyncStorage.removeItem('token');
+                            await AsyncStorage.removeItem('userId')
+                            navigation.navigate('Login');
+                        }
+                    }
+                } 
+            } catch (err) {
+                console.log(err)
+            }
         }
         checkForNet();
-
-    },[])
+    }, [])
     return (
         <ImageBackground
             source={require("../assets/bg1.jpg")}
@@ -46,7 +97,7 @@ const WelcomeScreen = ({ navigation }) => {
                     source={require("../assets/logo.png")}
                     style={styles.logo}
                 />
-                <TopLearnText styles={styles.firstText} color = "tomato" fontFamily= "ih" size="3">
+                <TopLearnText styles={styles.firstText} color="tomato" fontFamily="ih" size="3">
                     خودآموزی ، کسب تجربه ، ورود به بازار کار
                 </TopLearnText>
             </View>

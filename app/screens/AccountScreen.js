@@ -3,8 +3,14 @@ import Screen from '../components/shared/screen';
 import { Text, View, StyleSheet, Image, TouchableOpacity, TouchableHighlight } from 'react-native'
 import Icon from '../components/shared/icon';
 import ItemSeperator from '../components/shared/ItemSeperator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackActions } from '@react-navigation/native'
+const AccountScreen = ({ navigation }) => {
+    const handleLogout = async () => {
+        await AsyncStorage.r
+        tackActions.replace('Welcome'));
+    }
 
-const AccountScreen = () => {
     return (
         <Screen style={styles.screen}>
             <View style={styles.container}>
@@ -17,8 +23,8 @@ const AccountScreen = () => {
                     <Icon name="account-settings" backgroundColor='tomato' />
                 </TouchableOpacity>
             </View>
-            <ItemSeperator/>
-            <TouchableHighlight underlayColor="#f8f4f4" onPress={() => { }}>
+            <ItemSeperator />
+            <TouchableHighlight underlayColor="#f8f4f4" onPress={handleLogout}>
                 <View style={styles.container}>
                     <Icon name="logout" backgroundColor='tomato' />
                     <View style={styles.details}>
@@ -26,7 +32,7 @@ const AccountScreen = () => {
                     </View>
                 </View>
             </TouchableHighlight>
-        </Screen> 
+        </Screen>
     );
 }
 

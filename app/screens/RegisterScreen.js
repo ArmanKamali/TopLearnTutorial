@@ -25,8 +25,8 @@ const RegisterScreen = ({navigation}) => {
         try{
             const status = await registerUser(user);
             if(status === 201){
-                navigation.navigate('Login');
                 setLoading(false)
+                navigation.navigate('Login');
             }else{
                 setLoading(false)
                 console.log("Server error")

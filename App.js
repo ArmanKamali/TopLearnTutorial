@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { I18nManager } from 'react-native'
 import StackNavigator from './app/Containers/StackNavigator';
+import { ToastProvider } from 'react-native-toast-notifications'
 
 
 // Support for rtl
@@ -19,7 +20,7 @@ const App = () => {
     'ih': require('./app/assets/fonts/ih.ttf'),
   });
 
-  
+
 
 
   const onLayoutRootView = useCallback(async () => {
@@ -34,9 +35,11 @@ const App = () => {
 
 
   return (
-    <NavigationContainer>
-      <StackNavigator/>
-    </NavigationContainer>
+    <ToastProvider>
+      <NavigationContainer>
+        <StackNavigator />
+      </NavigationContainer>
+    </ToastProvider>
   );
 }
 
