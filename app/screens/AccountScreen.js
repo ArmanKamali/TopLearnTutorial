@@ -8,7 +8,7 @@ import { StackActions } from '@react-navigation/native'
 const AccountScreen = ({ navigation }) => {
     const handleLogout = async () => {
         await AsyncStorage.r
-        tackActions.replace('Welcome'));
+        StackActions.replace('Welcome'));
     }
 
     return (
