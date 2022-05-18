@@ -1,17 +1,15 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import Screen from '../components/shared/screen';
 import { StyleSheet, FlatList} from 'react-native'
 import Card from '../components/shared/Card';
-import TopLearnContext from '../contexts/TopLearnContext';
-
+import { useSelector } from 'react-redux';
 
 const TopCoursesScreen = () => {
-    const context = useContext(TopLearnContext);
-
+    const courses = useSelector(state => state.courses)
     return (
         <Screen style={styles.container}>
             <FlatList
-                data = {context.courses}
+                data = {courses}
                 keyExtractor = {(course) => course._id.toString()}
                 renderItem = {({item}) => (
                     <Card

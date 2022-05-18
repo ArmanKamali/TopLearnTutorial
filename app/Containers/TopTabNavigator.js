@@ -2,21 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import Screen from '../components/shared/screen';
 import { RFPercentage } from 'react-native-responsive-fontsize'
-import TopLearnContext from '../contexts/TopLearnContext';
-
+import { useDispatch } from 'react-redux';
 import { NewCoursesScreen, TopCoursesScreen, CoursesScreen } from './../screens'
-import { fetchCourses } from '../api/courses';
+
 import LoadingToast from '../components/shared/LoadingToast';
+import { getCourses } from './../actions/index';
 const TopTab = createMaterialTopTabNavigator();
 
 const TopTabNavigator = () => {
-    const [getCourses, setCourses] = useState([]);
+    const dispatch = useDispatch();
     const [spinner, setSpinner] = useState(true)
     useEffect(() => {
         try {
             const fetchData = async () => {
-                const courses = await fetchCourses();
-                setCourses(courses);
+                dispatch(getCourses());
                 setSpinner(false)
             }
             fetchData();
@@ -27,14 +26,10 @@ const TopTabNavigator = () => {
     }, [])
 
     return (
-        <TopLearnContext.Provider value={{
-            courses: getCourses,
-        }}>
+    
            
+        <Screen>
             <LoadingToast spinner={spinner} text='در حال بارگذاری...'/>
-
-            <Screen>
-
                 <TopTab.Navigator
                     initialRouteName="AllCourses"
                     backBehavior='none'
@@ -49,7 +44,6 @@ const TopTabNavigator = () => {
                             backgroundColor: '#f8f4f4',
 
                         }
-
                     }}
                 >
                     <TopTab.Screen name="AllCourses" component={CoursesScreen}
@@ -68,9 +62,7 @@ const TopTabNavigator = () => {
                         }}
                     />
                 </TopTab.Navigator>
-
             </Screen>
-        </TopLearnContext.Provider >
     );
 }
 

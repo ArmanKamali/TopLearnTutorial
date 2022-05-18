@@ -27,13 +27,15 @@ const LoginScreen = ({ navigation }) => {
             setSpinner(true);
             const status = await LoginUser(user);
             if (status === 200){
+                console.log(user)
+
                 setSpinner(false)
                 toast.show('ورود موفقیت آمیز بود', { type: 'success' , duration : 1000,animationType: 'zoom-in'})
-                // navigation.navigate('Home')
-                navigation.reset({
-                    index : 0,
-                    route : [{ name : 'Home'}]
-                })
+                navigation.navigate('Home')
+                // navigation.reset({
+                //     index : 0,
+                //     route : [{ name : 'Home'}]
+                // })
             }else {
                 setSpinner(false)
                 toast.show('ایمیل کاربری یا کلمه عبور مورد قبول نمی باشد.', { type: 'custom' })

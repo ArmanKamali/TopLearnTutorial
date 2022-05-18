@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import NetInfo from '@react-native-community/netinfo'
-
+import {useDispatch} from 'react-redux'
 import CustomButton from "./../components/shared/CustomButton";
 import TopLearnText from './../components/shared/topLearnText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { decodeToken } from "../Utils/jwt";
 import { useToast } from "react-native-toast-notifications";
+import { userAction } from "../actions";
 
 
 const confirmationAlert = () => {
@@ -35,6 +36,7 @@ const confirmationAlert = () => {
 const WelcomeScreen = ({ navigation }) => {
     const toast = useToast();
     const screenIndex = useNavigationState(state => state.index)
+    const dispatch = useDispatch();
     useEffect(()=>{
         let currentCount = 0;
 
@@ -67,7 +69,8 @@ const WelcomeScreen = ({ navigation }) => {
 
                     if (token !== null && userId !== null) {
                         const decodedToken = decodeToken(token);
-
+            
+                        dispatch(userAction(decodedToken.user));
                         if (decodedToken.user.userId === userId)
                             // navigation.navigate('Home');
                             navigation.dispatch(

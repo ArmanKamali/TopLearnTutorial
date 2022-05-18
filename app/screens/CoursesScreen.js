@@ -1,11 +1,11 @@
-import React , {useContext, useEffect} from 'react';
+import React , { useEffect} from 'react';
 import Screen from '../components/shared/screen';
 import { StyleSheet, FlatList , TouchableOpacity} from 'react-native'
 import Card from '../components/shared/Card';
-import TopLearnContext from './../contexts/TopLearnContext';
+import {useSelector} from 'react-redux'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const CoursesScreen = ({navigation}) => {
-    const context = useContext(TopLearnContext);
+    const courses = useSelector(state => state.courses);
 
     useEffect(()=>{
         const myFunc = async () =>{
@@ -17,7 +17,7 @@ const CoursesScreen = ({navigation}) => {
     return (
         <Screen style={styles.container}>
             <FlatList
-                data = {context.courses}
+                data = {courses}
                 keyExtractor = {(course) => course._id.toString()}
                 renderItem = {({item}) => (
                     <TouchableOpacity onPress={()=> navigation.navigate('CourseDetails', {course: item})}>
